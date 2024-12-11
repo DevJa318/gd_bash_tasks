@@ -13,8 +13,6 @@ while [[ $# -gt 0 ]]; do
   -o) operator="$2"; shift 2 ;;
   -n) shift; numbers=(); while [[ $1 && $1 != -* ]]; do numbers+=("$1"); shift; done ;;
   -d) debug=true; shift ;;
-  #  \?) echo "Invalid options: $OPTARG"; exit 1 ;;
-  #  :) echo "Option -$OPTARG requires an argument."; exit 1 ;;
  esac
 done
 
