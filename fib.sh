@@ -4,14 +4,18 @@
 # if n = 1, then it should return 1
 # if n > 1, it should return Fn-1 + Fn-2
 
-if [[ n == 0 ]]; then
+if [[ $1 -eq 0 ]]; then
     fib=0
-elif if [[ n==1 ]]; then
+elif [[ $1 -eq 1 ]]; then
     fib=1
 else
-    while (( $a + $b -le $n ))
-    do 
-
-
-
+    a=0
+    b=1
+    for ((i=2; i<=$1; i++)); do
+        fib=$((a+b))
+        a=$b
+        b=$fib
+    done
 fi
+
+echo "$fib"

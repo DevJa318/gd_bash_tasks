@@ -8,40 +8,47 @@
 # Operation: <operation>
 # Numbers: <all space-separated numbers>
 
-
-while getopts "hdo:" flag; do
- case $flag in
-   h) # Handle the -h flag
-   echo "Display script help information"
-   ;;
-   d) # Handle the -d flag
-   echo "User: $(whoami)"
-   echo "Script: $0"
-   echo "Operation: $operator"
-   echo "Numbers: $@"
-   ;;
-   o) # Handle the -f flag with an argument
-   operator=$OPTARG
-   # Process the specified file
-   ;;
-   \?)
-   # Handle invalid options
-   ;;
+while [[ $# -gt 0 ]]; do
+ case "$1" in
+  -o) operator="$2"; shift 2 ;;
+  -n) shift; numbers=(); while [[ $1 && $1 != -* ]]; do numbers+=("$1"); shift; done ;;
+  -d) debug=true; shift ;;
+  #  \?) echo "Invalid options: $OPTARG"; exit 1 ;;
+  #  :) echo "Option -$OPTARG requires an argument."; exit 1 ;;
  esac
 done
 
 case $operator in
     "-")
-    
+     result=${numbers[0]}
+     for ((i=1; i<${#numbers[@]}; i++));
+     do ((result -= numbers[i])); 
+     done
     ;;
     "+")
-
+    for num in "${numbers[@]}";
+      do ((result += num));
+    done
     ;;
     "*")
-
+    result=1; 
+    for num in "${numbers[@]}"; 
+    do ((result *= num)); 
+    done
     ;;
     "%")
-    
+    result=${numbers[0]}; 
+    for ((i=1; i<${#numbers[@]}; i++)); 
+    do ((result %= numbers[i]));
+    done
     ;;
 esac
 
+echo "Result: $result"
+
+if [ "$debug" = true ]; then
+   echo "User: $(whoami)"
+   echo "Script: $0"
+   echo "Operation: $operator"
+   echo "Numbers: ${numbers[*]}"
+fi
